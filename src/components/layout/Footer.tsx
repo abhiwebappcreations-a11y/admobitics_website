@@ -14,8 +14,12 @@ export function Footer() {
           {/* Brand Info */}
           <div className="lg:col-span-2 space-y-5">
             <div className="flex items-center gap-3.5">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#0D9488] to-[#0F766E] flex items-center justify-center font-black text-lg text-white shadow-lg border border-teal-400/30">
-                A
+              <div className="w-12 h-12 rounded-2xl overflow-hidden bg-white/10 p-0.5 border border-white/15 shadow-md">
+                <img
+                  src="/admobitics-logo.jpg"
+                  alt="Admobitics Digital Media Private Limited"
+                  className="w-full h-full object-cover rounded-xl"
+                />
               </div>
               <div>
                 <span className="font-extrabold text-xl tracking-tight text-white block">

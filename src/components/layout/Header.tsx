@@ -82,31 +82,19 @@ export function Header() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             
-            {/* High-Tech Custom Auto/Digital Screen Logo Icon */}
+            {/* Client Official Logo */}
             <Link href="/" className="flex items-center gap-3.5 group">
-              <div className="relative w-11 h-11 rounded-2xl bg-gradient-to-br from-[#0D9488] via-[#0F766E] to-[#13263D] flex items-center justify-center text-white shadow-lg shadow-teal-950/50 border border-teal-400/40 group-hover:scale-105 group-hover:border-teal-300 transition-all duration-300">
-                <svg
-                  className="w-6 h-6 text-teal-200 group-hover:text-white transition-colors"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  {/* Digital screen inside mobility bracket */}
-                  <rect x="2" y="3" width="20" height="14" rx="3" />
-                  <line x1="8" y1="21" x2="16" y2="21" />
-                  <line x1="12" y1="17" x2="12" y2="21" />
-                  {/* Glowing center play / ad signal */}
-                  <circle cx="12" cy="10" r="2.5" fill="#0D9488" />
-                </svg>
-                <span className="absolute -bottom-1 -right-1 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-[#0B1523]" />
+              <div className="relative w-12 h-12 rounded-2xl overflow-hidden bg-white/10 p-0.5 border border-white/15 shadow-lg group-hover:scale-105 group-hover:border-amber-400/40 transition-all duration-300">
+                <img
+                  src="/admobitics-logo.jpg"
+                  alt="Admobitics Digital Media Private Limited"
+                  className="w-full h-full object-cover rounded-xl"
+                />
               </div>
               <div className="flex flex-col">
-                <span className="font-extrabold text-xl tracking-tight text-white flex items-center gap-1.5 font-sans">
+                <span className="font-extrabold text-lg sm:text-xl tracking-tight text-white flex items-center gap-1.5 font-sans">
                   ADMOBITICS
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#0D9488]" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#D9A441]" />
                 </span>
                 <span className="text-[10px] tracking-widest text-slate-400 uppercase font-semibold">
                   Digital Media Pvt Ltd
