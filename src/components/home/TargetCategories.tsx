@@ -14,86 +14,104 @@ export function TargetCategories() {
   const categories = [
     {
       name: "Restaurants & Cafés",
-      desc: "Promote new food menus, weekend specials, and dining offers to diners traveling to commercial food corridors.",
+      desc: "Promote new menus, weekend specials, and family dining offers to commuters traveling to food hubs.",
       icon: Utensils,
+      highlight: "Madhapur & Jubilee Hills",
     },
     {
       name: "Retail & Consumer Brands",
-      desc: "Build retail footfall for boutique stores, electronics, apparel, and seasonal showroom sales.",
+      desc: "Drive footfall for boutique stores, electronics, apparel, and seasonal showroom sales across the city.",
       icon: ShoppingBag,
+      highlight: "High-Density Corridors",
     },
     {
       name: "Real Estate & Housing",
-      desc: "Highlight gated communities, apartment launches, and commercial leasing opportunities.",
+      desc: "Showcase luxury gated communities, apartment launches, and commercial leasing opportunities.",
       icon: Building2,
+      highlight: "Financial District & Gachibowli",
     },
     {
       name: "Educational Institutions",
-      desc: "Announce admissions, coaching batches, test-prep courses, and academy openings.",
+      desc: "Announce coaching batches, university admissions, test-prep courses, and academy openings.",
       icon: GraduationCap,
+      highlight: "Ameerpet & Dilsukhnagar",
     },
     {
       name: "Automobile Dealerships",
-      desc: "Display two-wheeler and four-wheeler test drive campaigns and service center promotions.",
+      desc: "Feature new two-wheeler and four-wheeler test-drive campaigns and festive service packages.",
       icon: Car,
+      highlight: "Begumpet & Secunderabad",
     },
     {
       name: "Events & Entertainment",
-      desc: "Drive ticket bookings for music concerts, theatre, local festivals, and movie releases.",
+      desc: "Drive ticket bookings for music concerts, movie releases, theatre, and city festivals.",
       icon: Ticket,
+      highlight: "Weekend Blasts (₹99/day)",
     },
     {
-      name: "Local Services & Clinics",
-      desc: "Connect neighborhood clinics, diagnostic centers, fitness clubs, and home services.",
+      name: "Clinics & Diagnostic Care",
+      desc: "Connect neighborhood clinics, diagnostic centers, fitness clubs, and personal services.",
       icon: Briefcase,
+      highlight: "Residential Zones",
     },
     {
       name: "Agencies & Media Buyers",
-      desc: "Include transit digital media into multi-channel brand campaigns for clients across Hyderabad.",
+      desc: "Integrate hyper-local mobility digital video into multi-channel campaigns for enterprise clients.",
       icon: Layers,
+      highlight: "Fleet Packages",
     },
   ];
 
   return (
-    <section className="py-20 bg-white border-b border-slate-200">
+    <section className="py-24 bg-[#0F1C2E] border-b border-white/10 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-3xl mx-auto space-y-3">
-          <p className="text-xs font-bold uppercase tracking-widest text-[#0D9488]">
-            Diverse Business Fit
-          </p>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-[#13263D] tracking-tight">
+        
+        {/* Section Header */}
+        <div className="text-center max-w-3xl mx-auto space-y-3 mb-16">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/20 text-xs font-bold uppercase tracking-widest text-teal-300">
+            <span>High-Impact Targeting</span>
+          </div>
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
             Who Can Advertise on Admobitics?
           </h2>
-          <p className="text-slate-600 text-base leading-relaxed">
-            From single-outlet local restaurants to regional enterprise brands — mobility digital advertising offers flexible exposure without massive billboard budgets.
+          <p className="text-slate-400 text-base leading-relaxed">
+            From neighborhood restaurants to enterprise brands — mobility digital advertising offers captive passenger exposure without massive billboard budgets.
           </p>
         </div>
 
-        <div className="mt-14 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* Categories Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {categories.map((cat) => {
             const Icon = cat.icon;
             return (
               <div
                 key={cat.name}
-                className="p-6 rounded-2xl bg-[#F4F6F8] border border-slate-200/80 hover:border-[#0D9488]/40 hover:bg-white hover:shadow-lg hover:shadow-slate-100 transition-all group"
+                className="glass-panel glass-panel-hover rounded-3xl p-6 flex flex-col justify-between group"
               >
-                <div className="w-12 h-12 rounded-xl bg-white border border-slate-200 text-[#0D9488] flex items-center justify-center mb-4 group-hover:scale-105 group-hover:bg-[#0D9488] group-hover:text-white transition-all">
-                  <Icon className="w-6 h-6" />
+                <div>
+                  <div className="w-12 h-12 rounded-2xl bg-white/[0.05] border border-white/10 text-teal-300 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:bg-[#0D9488] group-hover:text-white transition-all">
+                    <Icon className="w-6 h-6" />
+                  </div>
+                  <h3 className="text-base font-bold text-white mb-2">
+                    {cat.name}
+                  </h3>
+                  <p className="text-xs text-slate-400 leading-relaxed">
+                    {cat.desc}
+                  </p>
                 </div>
-                <h3 className="text-base font-bold text-[#13263D] mb-1.5">
-                  {cat.name}
-                </h3>
-                <p className="text-xs text-slate-600 leading-relaxed">
-                  {cat.desc}
-                </p>
+
+                <div className="pt-5 mt-5 border-t border-white/10 flex items-center justify-between text-[11px] text-teal-300/80 font-mono">
+                  <span>{cat.highlight}</span>
+                </div>
               </div>
             );
           })}
         </div>
 
-        <div className="mt-10 p-4 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs text-center max-w-2xl mx-auto">
-          <span className="font-semibold">Compliance Note:</span> All advertising categories and submitted creatives are subject to applicable advertising laws, content suitability standards, and regulatory approvals.
+        <div className="mt-12 p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-xs text-slate-400 text-center max-w-3xl mx-auto">
+          <strong className="text-teal-300">Compliance Standard:</strong> All advertising categories and submitted creatives are reviewed for content suitability and transit regulatory compliance prior to broadcast.
         </div>
+
       </div>
     </section>
   );

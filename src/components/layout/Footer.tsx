@@ -7,39 +7,42 @@ export function Footer() {
   const currentYear = 2026;
 
   return (
-    <footer className="bg-[#13263D] text-slate-300 border-t border-white/10 pt-16 pb-12">
+    <footer className="bg-[#070D16] text-slate-400 border-t border-white/10 pt-20 pb-14">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 lg:gap-8 pb-12 border-b border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8 pb-14 border-b border-white/10">
+          
           {/* Brand Info */}
-          <div className="lg:col-span-2 space-y-4">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#0D9488] to-[#0F766E] flex items-center justify-center font-bold text-lg text-white shadow-md border border-white/20">
+          <div className="lg:col-span-2 space-y-5">
+            <div className="flex items-center gap-3.5">
+              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#0D9488] to-[#0F766E] flex items-center justify-center font-black text-lg text-white shadow-lg border border-teal-400/30">
                 A
               </div>
               <div>
                 <span className="font-extrabold text-xl tracking-tight text-white block">
                   ADMOBITICS
                 </span>
-                <span className="text-[10px] tracking-wider text-slate-400 uppercase font-medium">
+                <span className="text-[10px] tracking-widest text-slate-400 uppercase font-semibold">
                   Digital Media Private Limited
                 </span>
               </div>
             </div>
-            <p className="text-sm text-slate-300 leading-relaxed max-w-sm">
+
+            <p className="text-sm text-slate-400 leading-relaxed max-w-sm">
               Developing a mobility-based digital advertising network inside autos across Hyderabad. Connecting local brands and retail businesses with daily commuters through passenger-facing digital screens.
             </p>
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs text-slate-300">
-              <ShieldCheck className="w-4 h-4 text-[#0D9488]" />
-              <span>Pilot Network Deployment • Hyderabad, Telangana</span>
+
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-xs text-teal-300">
+              <ShieldCheck className="w-4 h-4 text-teal-400" />
+              <span>Active Pilot Fleet: 10 Screens • Hyderabad, Telangana</span>
             </div>
           </div>
 
           {/* Quick Links */}
-          <div className="space-y-3">
+          <div className="space-y-4">
             <p className="text-xs font-bold text-white uppercase tracking-wider">
               Navigation
             </p>
-            <ul className="space-y-2 text-sm">
+            <ul className="space-y-2.5 text-xs">
               {siteConfig.navigation.map((item) => (
                 <li key={item.href}>
                   <Link
@@ -54,19 +57,24 @@ export function Footer() {
           </div>
 
           {/* Business & Commercial */}
-          <div className="space-y-3">
+          <div className="space-y-4">
             <p className="text-xs font-bold text-white uppercase tracking-wider">
-              Commercial
+              Commercial Plans
             </p>
-            <ul className="space-y-2 text-sm">
+            <ul className="space-y-2.5 text-xs">
               <li>
                 <Link href="/advertise#pricing" className="hover:text-white transition-colors">
-                  Standard 30-Day Campaign
+                  Standard 30-Day (₹49/day)
                 </Link>
               </li>
               <li>
                 <Link href="/advertise#pricing" className="hover:text-white transition-colors">
-                  Custom Campaign (Under 30D)
+                  Custom Mid-Term (₹69/day)
+                </Link>
+              </li>
+              <li>
+                <Link href="/advertise#pricing" className="hover:text-white transition-colors">
+                  Short-Term Flexi (₹99/day)
                 </Link>
               </li>
               <li>
@@ -79,26 +87,21 @@ export function Footer() {
                   Driver Partnerships
                 </Link>
               </li>
-              <li>
-                <Link href="/contact#agency" className="hover:text-white transition-colors">
-                  Agency & Media Buyers
-                </Link>
-              </li>
             </ul>
           </div>
 
           {/* Contact Details */}
-          <div className="space-y-3">
+          <div className="space-y-4">
             <p className="text-xs font-bold text-white uppercase tracking-wider">
-              Contact & Location
+              Founders & Office
             </p>
-            <div className="space-y-2.5 text-sm">
+            <div className="space-y-3 text-xs">
               <p className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-[#0D9488] shrink-0 mt-0.5" />
-                <span>{siteConfig.contact.registeredAddress}</span>
+                <MapPin className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
+                <span>Hyderabad, Telangana, India</span>
               </p>
               <p className="flex items-center gap-2.5">
-                <Mail className="w-4 h-4 text-[#0D9488] shrink-0" />
+                <Mail className="w-4 h-4 text-teal-400 shrink-0" />
                 <a
                   href={`mailto:${siteConfig.contact.email}`}
                   className="hover:text-white transition-colors"
@@ -107,24 +110,30 @@ export function Footer() {
                 </a>
               </p>
               <p className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 text-[#0D9488] shrink-0" />
-                <span>{siteConfig.contact.phone}</span>
+                <Phone className="w-4 h-4 text-teal-400 shrink-0" />
+                <a
+                  href={`tel:${siteConfig.contact.whatsappRaw}`}
+                  className="hover:text-white transition-colors"
+                >
+                  {siteConfig.contact.phone}
+                </a>
               </p>
               <div className="pt-2">
                 <Link
                   href="/contact"
-                  className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0D9488] hover:text-teal-300 transition-colors"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-teal-400 hover:text-teal-300 transition-colors"
                 >
-                  Open Contact Form
+                  View Founder Phone Lines
                   <ArrowUpRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
             </div>
           </div>
+
         </div>
 
         {/* Legal & Copyright Bar */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-500">
           <p>
             © {currentYear} {siteConfig.name}. All rights reserved.
           </p>
@@ -133,7 +142,7 @@ export function Footer() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="hover:text-slate-200 transition-colors"
+                className="hover:text-slate-300 transition-colors"
               >
                 {item.label}
               </Link>
