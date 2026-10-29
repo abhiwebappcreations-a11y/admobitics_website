@@ -2,16 +2,17 @@
 
 @layer base {
   :root {
-    --brand-navy: #0b1523;
-    --brand-navy-card: #111d2e;
-    --brand-teal: #0d9488;
-    --brand-teal-glow: rgba(13, 148, 136, 0.35);
-    --brand-gold: #d9a441;
+    --brand-navy: #0B1523;
+    --brand-navy-card: #101B2B;
+    --brand-gold: #C59A4E;
+    --brand-gold-light: #E0BA73;
+    --brand-gold-glow: rgba(197, 154, 78, 0.35);
+    --brand-teal: #0D9488;
   }
 
   body {
-    background-color: #0b1523;
-    color: #e2e8f0;
+    background-color: #0B1523;
+    color: #F1F5F9;
     font-family: var(--font-jakarta), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -20,25 +21,20 @@
   }
 }
 
-/* Background Grid Mesh */
+/* Background Luxury Grid Mesh */
 .bg-grid-pattern {
-  background-size: 40px 40px;
+  background-size: 44px 44px;
   background-image: 
-    linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    linear-gradient(to right, rgba(197, 154, 78, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(197, 154, 78, 0.04) 1px, transparent 1px);
 }
 
-.bg-dot-pattern {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.12) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-
-/* Glassmorphism Classes */
+/* Luxury Glassmorphism Panels */
 .glass-panel {
-  background: rgba(17, 29, 46, 0.7);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(16, 27, 43, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(197, 154, 78, 0.15);
 }
 
 .glass-panel-hover {
@@ -46,31 +42,31 @@
 }
 .glass-panel-hover:hover {
   background: rgba(22, 38, 60, 0.85);
-  border-color: rgba(13, 148, 136, 0.4);
+  border-color: rgba(197, 154, 78, 0.45);
   transform: translateY(-2px);
-  box-shadow: 0 12px 30px -10px rgba(13, 148, 136, 0.2);
+  box-shadow: 0 16px 36px -10px rgba(197, 154, 78, 0.18);
 }
 
-/* Ambient Glow Gradients */
-.glow-teal {
-  box-shadow: 0 0 50px -10px rgba(13, 148, 136, 0.3);
+/* Gold Gradient Text */
+.gold-gradient-text {
+  background: linear-gradient(135deg, #FFF0D0 0%, #E0BA73 50%, #C59A4E 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
-.glow-border {
-  position: relative;
+/* Gold Button */
+.btn-gold {
+  background: linear-gradient(135deg, #D4A757 0%, #C59A4E 50%, #A97E36 100%);
+  color: #0B1523;
+  font-weight: 700;
+  box-shadow: 0 10px 25px -5px rgba(197, 154, 78, 0.4);
+  border: 1px solid rgba(255, 240, 208, 0.3);
+  transition: all 0.2s ease;
 }
-.glow-border::before {
-  content: '';
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  padding: 1px;
-  background: linear-gradient(135deg, rgba(13, 148, 136, 0.6), transparent 60%);
-  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
+.btn-gold:hover {
+  background: linear-gradient(135deg, #E0BA73 0%, #D4A757 50%, #B88B3E 100%);
+  box-shadow: 0 14px 30px -5px rgba(197, 154, 78, 0.55);
+  transform: translateY(-1px);
 }
 
 /* Custom Scrollbar */
@@ -78,19 +74,18 @@
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0b1523;
+  background: #0B1523;
 }
 ::-webkit-scrollbar-thumb {
   background: #1e293b;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #0d9488;
+  background: #C59A4E;
 }
 
-/* Tactile Button Feedback */
 .touch-press {
-  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.15s ease;
+  transition: transform 0.15s ease, opacity 0.15s ease;
 }
 .touch-press:active {
   transform: scale(0.97);
