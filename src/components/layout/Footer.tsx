@@ -7,14 +7,14 @@ export function Footer() {
   const currentYear = 2026;
 
   return (
-    <footer className="bg-[#070D16] text-slate-400 border-t border-white/10 pt-20 pb-14">
+    <footer className="bg-[#0F172A] text-slate-400 border-t border-slate-800 pt-20 pb-14">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8 pb-14 border-b border-white/10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 lg:gap-8 pb-14 border-b border-slate-800">
           
           {/* Brand Info */}
           <div className="lg:col-span-2 space-y-5">
             <div className="flex items-center gap-3.5">
-              <div className="w-12 h-12 rounded-2xl overflow-hidden bg-white/10 p-0.5 border border-white/15 shadow-md">
+              <div className="w-12 h-12 rounded-2xl overflow-hidden bg-white/10 p-0.5 border border-[#C59A4E]/30 shadow-md">
                 <img
                   src="/admobitics-logo.jpg"
                   alt="Admobitics Digital Media Private Limited"
@@ -25,7 +25,7 @@ export function Footer() {
                 <span className="font-extrabold text-xl tracking-tight text-white block">
                   ADMOBITICS
                 </span>
-                <span className="text-[10px] tracking-widest text-slate-400 uppercase font-semibold">
+                <span className="text-[10px] tracking-widest text-[#E0BA73] uppercase font-bold">
                   Digital Media Private Limited
                 </span>
               </div>
@@ -35,8 +35,8 @@ export function Footer() {
               Developing a mobility-based digital advertising network inside autos across Hyderabad. Connecting local brands and retail businesses with daily commuters through passenger-facing digital screens.
             </p>
 
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-xs text-teal-300">
-              <ShieldCheck className="w-4 h-4 text-teal-400" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/10 text-xs text-[#E0BA73]">
+              <ShieldCheck className="w-4 h-4 text-[#C59A4E]" />
               <span>Active Pilot Fleet: 10 Screens • Hyderabad, Telangana</span>
             </div>
           </div>
@@ -101,11 +101,11 @@ export function Footer() {
             </p>
             <div className="space-y-3 text-xs">
               <p className="flex items-start gap-2.5">
-                <MapPin className="w-4 h-4 text-teal-400 shrink-0 mt-0.5" />
+                <MapPin className="w-4 h-4 text-[#C59A4E] shrink-0 mt-0.5" />
                 <span>Hyderabad, Telangana, India</span>
               </p>
               <p className="flex items-center gap-2.5">
-                <Mail className="w-4 h-4 text-teal-400 shrink-0" />
+                <Mail className="w-4 h-4 text-[#C59A4E] shrink-0" />
                 <a
                   href={`mailto:${siteConfig.contact.email}`}
                   className="hover:text-white transition-colors"
@@ -114,7 +114,7 @@ export function Footer() {
                 </a>
               </p>
               <p className="flex items-center gap-2.5">
-                <Phone className="w-4 h-4 text-teal-400 shrink-0" />
+                <Phone className="w-4 h-4 text-[#C59A4E] shrink-0" />
                 <a
                   href={`tel:${siteConfig.contact.whatsappRaw}`}
                   className="hover:text-white transition-colors"
@@ -125,7 +125,7 @@ export function Footer() {
               <div className="pt-2">
                 <Link
                   href="/contact"
-                  className="inline-flex items-center gap-1.5 text-xs font-bold text-teal-400 hover:text-teal-300 transition-colors"
+                  className="inline-flex items-center gap-1.5 text-xs font-bold text-[#E0BA73] hover:underline transition-colors"
                 >
                   View Founder Phone Lines
                   <ArrowUpRight className="w-3.5 h-3.5" />

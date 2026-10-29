@@ -2,17 +2,20 @@
 
 @layer base {
   :root {
-    --brand-navy: #0B1523;
-    --brand-navy-card: #101B2B;
+    --brand-bg: #FAFAF9;
+    --brand-surface: #FFFFFF;
+    --brand-slate-dark: #0F172A;
+    --brand-slate-body: #334155;
+    --brand-slate-muted: #64748B;
     --brand-gold: #C59A4E;
-    --brand-gold-light: #E0BA73;
-    --brand-gold-glow: rgba(197, 154, 78, 0.35);
-    --brand-teal: #0D9488;
+    --brand-gold-dark: #A87E34;
+    --brand-gold-light: #F7EFE1;
+    --brand-gold-border: rgba(197, 154, 78, 0.28);
   }
 
   body {
-    background-color: #0B1523;
-    color: #F1F5F9;
+    background-color: var(--brand-bg);
+    color: var(--brand-slate-dark);
     font-family: var(--font-jakarta), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -21,51 +24,51 @@
   }
 }
 
-/* Background Luxury Grid Mesh */
-.bg-grid-pattern {
-  background-size: 44px 44px;
+/* Subtle Architectural Grid Pattern (Apple-Style) */
+.bg-grid-subtle {
+  background-size: 40px 40px;
   background-image: 
-    linear-gradient(to right, rgba(197, 154, 78, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(197, 154, 78, 0.04) 1px, transparent 1px);
+    linear-gradient(to right, rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
 }
 
-/* Luxury Glassmorphism Panels */
-.glass-panel {
-  background: rgba(16, 27, 43, 0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(197, 154, 78, 0.15);
+/* Pristine Surface Cards */
+.card-clean {
+  background: #FFFFFF;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.02), 0 1px 2px -1px rgba(0, 0, 0, 0.02);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
-
-.glass-panel-hover {
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.glass-panel-hover:hover {
-  background: rgba(22, 38, 60, 0.85);
+.card-clean:hover {
   border-color: rgba(197, 154, 78, 0.45);
+  box-shadow: 0 12px 32px -8px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(197, 154, 78, 0.15);
   transform: translateY(-2px);
-  box-shadow: 0 16px 36px -10px rgba(197, 154, 78, 0.18);
 }
 
-/* Gold Gradient Text */
-.gold-gradient-text {
-  background: linear-gradient(135deg, #FFF0D0 0%, #E0BA73 50%, #C59A4E 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* Gold Button */
-.btn-gold {
-  background: linear-gradient(135deg, #D4A757 0%, #C59A4E 50%, #A97E36 100%);
-  color: #0B1523;
+/* Champagne Gold Primary Action Button */
+.btn-gold-solid {
+  background: #C59A4E;
+  color: #FFFFFF;
   font-weight: 700;
-  box-shadow: 0 10px 25px -5px rgba(197, 154, 78, 0.4);
-  border: 1px solid rgba(255, 240, 208, 0.3);
+  box-shadow: 0 4px 14px 0 rgba(197, 154, 78, 0.35);
   transition: all 0.2s ease;
 }
-.btn-gold:hover {
-  background: linear-gradient(135deg, #E0BA73 0%, #D4A757 50%, #B88B3E 100%);
-  box-shadow: 0 14px 30px -5px rgba(197, 154, 78, 0.55);
+.btn-gold-solid:hover {
+  background: #A87E34;
+  box-shadow: 0 6px 20px 0 rgba(197, 154, 78, 0.45);
+  transform: translateY(-1px);
+}
+
+/* Dark Contrast Secondary Button */
+.btn-dark {
+  background: #0F172A;
+  color: #FFFFFF;
+  font-weight: 600;
+  box-shadow: 0 4px 12px 0 rgba(15, 23, 42, 0.15);
+  transition: all 0.2s ease;
+}
+.btn-dark:hover {
+  background: #1E293B;
   transform: translateY(-1px);
 }
 
@@ -74,10 +77,10 @@
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0B1523;
+  background: #FAFAF9;
 }
 ::-webkit-scrollbar-thumb {
-  background: #1e293b;
+  background: #CBD5E1;
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {

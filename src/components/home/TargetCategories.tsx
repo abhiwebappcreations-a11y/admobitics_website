@@ -14,7 +14,7 @@ export function TargetCategories() {
   const categories = [
     {
       name: "Restaurants & Cafés",
-      desc: "Promote new menus, weekend specials, and family dining offers to commuters traveling to food hubs.",
+      desc: "Promote new menus, weekend specials, and family dining offers to commuters traveling to food corridors.",
       icon: Utensils,
       highlight: "Madhapur & Jubilee Hills",
     },
@@ -63,18 +63,18 @@ export function TargetCategories() {
   ];
 
   return (
-    <section className="py-24 bg-[#0F1C2E] border-b border-white/10 relative">
+    <section className="py-24 bg-[#FAFAF9] border-b border-slate-200/80">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-3 mb-16">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/10 border border-teal-500/20 text-xs font-bold uppercase tracking-widest text-teal-300">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F7EFE1] border border-[#C59A4E]/30 text-xs font-bold uppercase tracking-widest text-[#A87E34]">
             <span>High-Impact Targeting</span>
           </div>
-          <h2 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
+          <h2 className="text-3xl sm:text-5xl font-extrabold text-[#0F172A] tracking-tight">
             Who Can Advertise on Admobitics?
           </h2>
-          <p className="text-slate-400 text-base leading-relaxed">
+          <p className="text-slate-600 text-base leading-relaxed">
             From neighborhood restaurants to enterprise brands — mobility digital advertising offers captive passenger exposure without massive billboard budgets.
           </p>
         </div>
@@ -86,21 +86,21 @@ export function TargetCategories() {
             return (
               <div
                 key={cat.name}
-                className="glass-panel glass-panel-hover rounded-3xl p-6 flex flex-col justify-between group"
+                className="card-clean rounded-3xl p-6 flex flex-col justify-between group"
               >
                 <div>
-                  <div className="w-12 h-12 rounded-2xl bg-white/[0.05] border border-white/10 text-teal-300 flex items-center justify-center mb-5 group-hover:scale-110 group-hover:bg-[#0D9488] group-hover:text-white transition-all">
+                  <div className="w-12 h-12 rounded-2xl bg-[#F7EFE1] text-[#A87E34] flex items-center justify-center mb-5 group-hover:scale-110 group-hover:bg-[#C59A4E] group-hover:text-white transition-all">
                     <Icon className="w-6 h-6" />
                   </div>
-                  <h3 className="text-base font-bold text-white mb-2">
+                  <h3 className="text-base font-bold text-[#0F172A] mb-2">
                     {cat.name}
                   </h3>
-                  <p className="text-xs text-slate-400 leading-relaxed">
+                  <p className="text-xs text-slate-600 leading-relaxed">
                     {cat.desc}
                   </p>
                 </div>
 
-                <div className="pt-5 mt-5 border-t border-white/10 flex items-center justify-between text-[11px] text-teal-300/80 font-mono">
+                <div className="pt-5 mt-5 border-t border-slate-100 flex items-center justify-between text-[11px] text-[#A87E34] font-semibold">
                   <span>{cat.highlight}</span>
                 </div>
               </div>
@@ -108,8 +108,8 @@ export function TargetCategories() {
           })}
         </div>
 
-        <div className="mt-12 p-4 rounded-2xl bg-white/[0.03] border border-white/10 text-xs text-slate-400 text-center max-w-3xl mx-auto">
-          <strong className="text-teal-300">Compliance Standard:</strong> All advertising categories and submitted creatives are reviewed for content suitability and transit regulatory compliance prior to broadcast.
+        <div className="mt-12 p-4 rounded-2xl bg-white border border-slate-200 text-xs text-slate-500 text-center max-w-3xl mx-auto">
+          <strong className="text-[#A87E34]">Compliance Standard:</strong> All advertising categories and submitted creatives are reviewed for content suitability and transit regulatory compliance prior to broadcast.
         </div>
 
       </div>

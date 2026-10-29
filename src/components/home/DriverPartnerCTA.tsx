@@ -4,20 +4,20 @@ import { ArrowRight, CheckCircle2, Shield, HeartHandshake, Sparkles } from "luci
 
 export function DriverPartnerCTA() {
   return (
-    <section className="py-24 bg-[#0F1C2E] text-white border-b border-white/10 relative overflow-hidden">
+    <section className="py-24 bg-[#0F172A] text-white border-b border-slate-800 relative overflow-hidden">
       
-      {/* Background radial glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-teal-500/10 blur-[120px] pointer-events-none" />
+      {/* Background warm radial accent */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[350px] bg-[#C59A4E]/10 blur-[130px] pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl border border-white/10 p-8 sm:p-14 lg:p-16 glass-panel relative overflow-hidden">
+        <div className="rounded-3xl border border-white/10 p-8 sm:p-14 lg:p-16 bg-white/[0.03] backdrop-blur-md relative overflow-hidden">
           
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             
             {/* Left Content */}
             <div className="lg:col-span-8 space-y-6">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-teal-500/10 border border-teal-500/20 text-xs text-teal-300 font-bold uppercase tracking-wider">
-                <HeartHandshake className="w-4 h-4 text-teal-400" />
+              <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/15 text-xs text-[#E0BA73] font-bold uppercase tracking-wider">
+                <HeartHandshake className="w-4 h-4 text-[#C59A4E]" />
                 <span>Auto Driver & Vehicle Owner Network</span>
               </div>
 
@@ -48,7 +48,7 @@ export function DriverPartnerCTA() {
               <div className="pt-4 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
                 <Link
                   href="/partner"
-                  className="px-7 py-4 bg-gradient-to-r from-teal-500 to-teal-600 hover:from-teal-600 hover:to-teal-500 text-white font-bold rounded-full shadow-xl shadow-teal-950/60 transition-all text-center flex items-center justify-center gap-2 text-xs tracking-wider uppercase touch-press"
+                  className="btn-gold-solid px-8 py-4 rounded-full flex items-center justify-center gap-2 text-xs tracking-wider uppercase touch-press"
                 >
                   <span>Register Interest as a Driver</span>
                   <ArrowRight className="w-4 h-4" />
@@ -56,7 +56,7 @@ export function DriverPartnerCTA() {
 
                 <Link
                   href="/contact"
-                  className="px-7 py-4 glass-panel hover:bg-white/10 text-white font-semibold rounded-full border border-white/15 transition-all text-center text-xs tracking-wider uppercase touch-press"
+                  className="px-8 py-4 rounded-full border border-white/20 hover:bg-white/10 text-white font-semibold transition-all text-center text-xs tracking-wider uppercase touch-press"
                 >
                   Contact Our Team
                 </Link>
@@ -69,8 +69,8 @@ export function DriverPartnerCTA() {
 
             {/* Right Mini Graphic */}
             <div className="lg:col-span-4 hidden lg:block">
-              <div className="p-8 rounded-3xl bg-[#0B1523]/80 border border-white/10 text-center space-y-4 shadow-xl">
-                <div className="w-16 h-16 mx-auto rounded-2xl bg-teal-500/10 border border-teal-500/20 flex items-center justify-center text-teal-400">
+              <div className="p-8 rounded-3xl bg-black/40 border border-white/10 text-center space-y-4 shadow-xl">
+                <div className="w-16 h-16 mx-auto rounded-2xl bg-white/10 border border-white/15 flex items-center justify-center text-[#E0BA73]">
                   <Shield className="w-8 h-8" />
                 </div>
                 <h4 className="font-bold text-white text-base">Safety First Protocol</h4>
