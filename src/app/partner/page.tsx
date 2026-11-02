@@ -43,7 +43,8 @@ export default function PartnerPage() {
       if (res.ok) {
         setSubmitted(true);
       } else {
-        alert("Registration could not be submitted. Please connect via WhatsApp directly.");
+        const errData = await res.json().catch(() => ({}));
+        alert(errData.details || errData.error || "Registration could not be submitted. Please connect via WhatsApp directly.");
       }
     } catch {
       alert("Submission error. Please connect via WhatsApp directly.");

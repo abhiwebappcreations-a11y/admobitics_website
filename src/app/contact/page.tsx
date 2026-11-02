@@ -41,7 +41,8 @@ export default function ContactPage() {
       if (res.ok) {
         setSubmitted(true);
       } else {
-        alert("Message could not be sent. Please connect via WhatsApp directly.");
+        const errData = await res.json().catch(() => ({}));
+        alert(errData.details || errData.error || "Message could not be sent. Please connect via WhatsApp directly.");
       }
     } catch {
       alert("Submission error. Please connect via WhatsApp directly.");
