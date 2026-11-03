@@ -2,13 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 const String kSupabaseUrl = 'https://uleazamtdwpkmaciucho.supabase.co';
 const String kSupabaseServiceKey =
     'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZWF6YW10ZHdwa21hY2l1Y2hvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MzEwMTc1MiwiZXhwIjoyMTA4Njc3NzUyfQ.FMazbHKV5XNbgFWL2QAV4WbU3PGPuzu0GjNRI5LkW-c';
 
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Local Notifications
+  try {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    const InitializationSettings initializationSettings =
+        InitializationSettings(android: initializationSettingsAndroid);
+    await flutterLocalNotificationsPlugin.initialize(
+      settings: initializationSettings,
+    );
+
+    // Request notification permissions for Android 13+
+    final androidImplementation = flutterLocalNotificationsPlugin
+        .resolvePlatformSpecificImplementation<
+            AndroidFlutterLocalNotificationsPlugin>();
+    await androidImplementation?.requestNotificationsPermission();
+  } catch (e) {
+    debugPrint('Notifications init error: $e');
+  }
+
+  // Initialize Supabase
   try {
     await Supabase.initialize(
       url: kSupabaseUrl,
@@ -60,6 +86,7 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final SupabaseClient _supabase = Supabase.instance.client;
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   bool _isLoading = false;
   String? _errorMessage;
@@ -79,7 +106,47 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
   @override
   void dispose() {
     _tabController.dispose();
+    _audioPlayer.dispose();
     super.dispose();
+  }
+
+  Future<void> _playAlertSound() async {
+    try {
+      await _audioPlayer.stop();
+      await _audioPlayer.play(
+        UrlSource('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3'),
+        volume: 1.0,
+      );
+    } catch (e) {
+      debugPrint('Audio error: $e');
+    }
+  }
+
+  Future<void> _triggerAlarmNotification(String title, String body) async {
+    try {
+      const AndroidNotificationDetails androidPlatformChannelSpecifics =
+          AndroidNotificationDetails(
+        'admobitics_lead_channel_v2',
+        'Admobitics Lead Alerts',
+        channelDescription: 'High priority lead notification with loud alert sound',
+        importance: Importance.max,
+        priority: Priority.high,
+        playSound: true,
+        enableVibration: true,
+        fullScreenIntent: true,
+      );
+      const NotificationDetails platformChannelSpecifics =
+          NotificationDetails(android: androidPlatformChannelSpecifics);
+
+      await flutterLocalNotificationsPlugin.show(
+        id: DateTime.now().millisecondsSinceEpoch ~/ 1000,
+        title: title,
+        body: body,
+        notificationDetails: platformChannelSpecifics,
+      );
+    } catch (e) {
+      debugPrint('Notification show error: $e');
+    }
   }
 
   Future<void> _fetchAllLeads() async {
@@ -129,6 +196,11 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
             table: 'contact_enquiries',
             callback: (payload) {
               _fetchAllLeads();
+              _playAlertSound();
+              _triggerAlarmNotification(
+                'New Message from Website!',
+                'A visitor just sent an enquiry on Admobitics. Tap to view and call.',
+              );
               _showNewLeadNotification('New Website Contact Message Received!');
             },
           )
@@ -138,6 +210,11 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
             table: 'advertiser_enquiries',
             callback: (payload) {
               _fetchAllLeads();
+              _playAlertSound();
+              _triggerAlarmNotification(
+                'New Advertiser Campaign Lead!',
+                'An advertiser requested auto screens. Tap to view details.',
+              );
               _showNewLeadNotification('New Advertiser Campaign Lead Received!');
             },
           )
@@ -147,6 +224,11 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
             table: 'driver_enquiries',
             callback: (payload) {
               _fetchAllLeads();
+              _playAlertSound();
+              _triggerAlarmNotification(
+                'New Auto Driver Partner Registration!',
+                'An auto driver signed up. Tap to call and verify.',
+              );
               _showNewLeadNotification('New Auto Driver Registration Received!');
             },
           )
@@ -261,6 +343,18 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
           ],
         ),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.volume_up_rounded, color: Colors.amberAccent),
+            tooltip: 'Test Loud Alert Sound',
+            onPressed: () async {
+              await _playAlertSound();
+              await _triggerAlarmNotification(
+                'TEST ALERT: Loud Speaker & Notification',
+                'Sound, vibration, and heads-up banner are working perfectly!',
+              );
+              _showNewLeadNotification('Playing test siren & notification...');
+            },
+          ),
           IconButton(
             icon: const Icon(Icons.refresh_rounded, color: Colors.white),
             tooltip: 'Sync Now',
