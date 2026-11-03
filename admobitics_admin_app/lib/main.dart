@@ -1,8 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-void main() {
+const String kSupabaseUrl = 'https://uleazamtdwpkmaciucho.supabase.co';
+const String kSupabaseServiceKey =
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsZWF6YW10ZHdwa21hY2l1Y2hvIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc5MzEwMTc1MiwiZXhwIjoyMTA4Njc3NzUyfQ.FMazbHKV5XNbgFWL2QAV4WbU3PGPuzu0GjNRI5LkW-c';
+
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await Supabase.initialize(
+      url: kSupabaseUrl,
+      publishableKey: kSupabaseServiceKey,
+    );
+  } catch (e) {
+    debugPrint('Supabase init error: $e');
+  }
+
   runApp(const AdmobiticsAdminApp());
 }
 
@@ -34,34 +49,6 @@ class AdmobiticsAdminApp extends StatelessWidget {
   }
 }
 
-class LeadModel {
-  final String id;
-  final String businessName;
-  final String contactPerson;
-  final String phone;
-  final String email;
-  final String category;
-  final int autos;
-  final int days;
-  final String location;
-  final String status;
-  final String time;
-
-  LeadModel({
-    required this.id,
-    required this.businessName,
-    required this.contactPerson,
-    required this.phone,
-    required this.email,
-    required this.category,
-    required this.autos,
-    required this.days,
-    required this.location,
-    required this.status,
-    required this.time,
-  });
-}
-
 class AdminHomeScreen extends StatefulWidget {
   const AdminHomeScreen({super.key});
 
@@ -72,77 +59,119 @@ class AdminHomeScreen extends StatefulWidget {
 class _AdminHomeScreenState extends State<AdminHomeScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final SupabaseClient _supabase = Supabase.instance.client;
 
-  // Real-time synced leads list
-  final List<LeadModel> _advertiserLeads = [
-    LeadModel(
-      id: '1',
-      businessName: 'Paradise Biryani Corridors',
-      contactPerson: 'K. Raghunath',
-      phone: '+91 76598 88483',
-      email: 'raghu@paradise.in',
-      category: 'Restaurants & Cafés',
-      autos: 10,
-      days: 30,
-      location: 'Madhapur, Hitec City',
-      status: 'New Lead',
-      time: 'Just Now',
-    ),
-    LeadModel(
-      id: '2',
-      businessName: 'Vertex Smart Residences',
-      contactPerson: 'Sunita Rao',
-      phone: '+91 93902 75151',
-      email: 'marketing@vertex.com',
-      category: 'Real Estate & Housing',
-      autos: 10,
-      days: 30,
-      location: 'Gachibowli, Financial District',
-      status: 'Proposal Shared',
-      time: '2 hours ago',
-    ),
-  ];
+  bool _isLoading = false;
+  String? _errorMessage;
 
-  final List<Map<String, String>> _driverLeads = [
-    {
-      'id': 'd1',
-      'name': 'M. Yadaiah',
-      'phone': '+91 95153 23535',
-      'autoNo': 'TS 09 UA 7890',
-      'area': 'Madhapur & Jubilee Hills',
-      'time': 'Today, 9:30 AM',
-    },
-    {
-      'id': 'd2',
-      'name': 'K. Srinivas Goud',
-      'phone': '+91 76598 88483',
-      'autoNo': 'TS 10 UB 4321',
-      'area': 'Secunderabad & Begumpet',
-      'time': 'Yesterday',
-    },
-  ];
+  List<Map<String, dynamic>> _contactLeads = [];
+  List<Map<String, dynamic>> _advertiserLeads = [];
+  List<Map<String, dynamic>> _driverLeads = [];
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 3, vsync: this);
+    _fetchAllLeads();
+    _setupRealtimeSubscriptions();
   }
 
-  // Trigger test loud alarm & lock-screen alert banner
-  void _simulateIncomingLeadSound() {
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _fetchAllLeads() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final contactRes = await _supabase
+          .from('contact_enquiries')
+          .select('*')
+          .order('created_at', ascending: false);
+
+      final advertiserRes = await _supabase
+          .from('advertiser_enquiries')
+          .select('*')
+          .order('created_at', ascending: false);
+
+      final driverRes = await _supabase
+          .from('driver_enquiries')
+          .select('*')
+          .order('created_at', ascending: false);
+
+      setState(() {
+        _contactLeads = List<Map<String, dynamic>>.from(contactRes);
+        _advertiserLeads = List<Map<String, dynamic>>.from(advertiserRes);
+        _driverLeads = List<Map<String, dynamic>>.from(driverRes);
+        _isLoading = false;
+      });
+    } catch (e) {
+      debugPrint('Error fetching leads: $e');
+      setState(() {
+        _errorMessage = e.toString();
+        _isLoading = false;
+      });
+    }
+  }
+
+  void _setupRealtimeSubscriptions() {
+    try {
+      _supabase
+          .channel('public:leads_realtime')
+          .onPostgresChanges(
+            event: PostgresChangeEvent.all,
+            schema: 'public',
+            table: 'contact_enquiries',
+            callback: (payload) {
+              _fetchAllLeads();
+              _showNewLeadNotification('New Website Contact Message Received!');
+            },
+          )
+          .onPostgresChanges(
+            event: PostgresChangeEvent.all,
+            schema: 'public',
+            table: 'advertiser_enquiries',
+            callback: (payload) {
+              _fetchAllLeads();
+              _showNewLeadNotification('New Advertiser Campaign Lead Received!');
+            },
+          )
+          .onPostgresChanges(
+            event: PostgresChangeEvent.all,
+            schema: 'public',
+            table: 'driver_enquiries',
+            callback: (payload) {
+              _fetchAllLeads();
+              _showNewLeadNotification('New Auto Driver Registration Received!');
+            },
+          )
+          .subscribe();
+    } catch (e) {
+      debugPrint('Realtime subscription error: $e');
+    }
+  }
+
+  void _showNewLeadNotification(String message) {
+    if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         backgroundColor: const Color(0xFF0D9488),
         behavior: SnackBarBehavior.floating,
+        duration: const Duration(seconds: 4),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        content: const Row(
+        content: Row(
           children: [
-            Icon(Icons.notifications_active, color: Colors.white),
-            SizedBox(width: 12),
+            const Icon(Icons.notifications_active, color: Colors.white),
+            const SizedBox(width: 12),
             Expanded(
               child: Text(
-                'LOUD ALERT: New Advertiser Enquiry Received!',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                message,
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
             ),
           ],
@@ -153,19 +182,47 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
 
   Future<void> _makeCall(String phone) async {
     final cleanPhone = phone.replaceAll(RegExp(r'[^0-9+]'), '');
+    if (cleanPhone.isEmpty) return;
     final uri = Uri.parse('tel:$cleanPhone');
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri);
+    } else {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Cannot place call to $phone')),
+      );
     }
   }
 
-  Future<void> _openWhatsApp(String phone, String name) async {
+  Future<void> _openWhatsApp(String phone, String name, String contextText) async {
     final cleanPhone = phone.replaceAll(RegExp(r'[^0-9]'), '');
+    if (cleanPhone.isEmpty) return;
+
+    final formattedNumber = cleanPhone.startsWith('91') && cleanPhone.length > 10
+        ? cleanPhone
+        : (cleanPhone.length == 10 ? '91$cleanPhone' : cleanPhone);
+
     final message = Uri.encodeComponent(
-        'Hello $name, this is Admobitics team regarding your in-auto advertising enquiry.');
-    final uri = Uri.parse('https://wa.me/$cleanPhone?text=$message');
+        'Hello $name, this is the Admobitics Director team regarding your enquiry ($contextText). How can we assist you today?');
+    final uri = Uri.parse('https://wa.me/$formattedNumber?text=$message');
+
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Could not open WhatsApp for $phone')),
+      );
+    }
+  }
+
+  String _formatDate(dynamic dateVal) {
+    if (dateVal == null) return 'Recent';
+    try {
+      final dt = DateTime.parse(dateVal.toString()).toLocal();
+      return DateFormat('dd MMM, hh:mm a').format(dt);
+    } catch (_) {
+      return dateVal.toString();
     }
   }
 
@@ -190,13 +247,13 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
                   width: 8,
                   height: 8,
                   decoration: const BoxDecoration(
-                    color: Color(0xFF0D9488),
+                    color: Color(0xFF22C55E),
                     shape: BoxShape.circle,
                   ),
                 ),
                 const SizedBox(width: 6),
                 const Text(
-                  '10 Screens Live in Hyderabad',
+                  'Connected to Supabase Live',
                   style: TextStyle(fontSize: 11, color: Colors.tealAccent),
                 ),
               ],
@@ -205,18 +262,9 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.volume_up_rounded, color: Colors.tealAccent),
-            tooltip: 'Test Loud Alert Sound',
-            onPressed: _simulateIncomingLeadSound,
-          ),
-          IconButton(
-            icon: const Icon(Icons.refresh_rounded),
-            tooltip: 'Sync Leads',
-            onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Leads synced with Supabase!')),
-              );
-            },
+            icon: const Icon(Icons.refresh_rounded, color: Colors.white),
+            tooltip: 'Sync Now',
+            onPressed: _fetchAllLeads,
           ),
         ],
         bottom: TabBar(
@@ -225,258 +273,491 @@ class _AdminHomeScreenState extends State<AdminHomeScreen>
           indicatorWeight: 3,
           labelColor: Colors.white,
           unselectedLabelColor: Colors.white70,
+          isScrollable: true,
+          tabAlignment: TabAlignment.start,
           tabs: [
             Tab(
-              icon: const Icon(Icons.campaign_rounded, size: 20),
+              icon: const Icon(Icons.mail_rounded, size: 18),
+              text: 'Messages (${_contactLeads.length})',
+            ),
+            Tab(
+              icon: const Icon(Icons.campaign_rounded, size: 18),
               text: 'Advertisers (${_advertiserLeads.length})',
             ),
             Tab(
-              icon: const Icon(Icons.electric_rickshaw_rounded, size: 20),
+              icon: const Icon(Icons.electric_rickshaw_rounded, size: 18),
               text: 'Drivers (${_driverLeads.length})',
             ),
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildAdvertiserList(),
-          _buildDriverList(),
-        ],
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(color: Color(0xFF0D9488)),
+            )
+          : _errorMessage != null
+              ? Center(
+                  child: Padding(
+                    padding: const EdgeInsets.all(24.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.error_outline, size: 48, color: Colors.red),
+                        const SizedBox(height: 12),
+                        const Text(
+                          'Connection Error',
+                          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          _errorMessage!,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 12, color: Colors.grey),
+                        ),
+                        const SizedBox(height: 16),
+                        ElevatedButton.icon(
+                          onPressed: _fetchAllLeads,
+                          icon: const Icon(Icons.refresh),
+                          label: const Text('Try Again'),
+                        ),
+                      ],
+                    ),
+                  ),
+                )
+              : TabBarView(
+                  controller: _tabController,
+                  children: [
+                    _buildContactList(),
+                    _buildAdvertiserList(),
+                    _buildDriverList(),
+                  ],
+                ),
+    );
+  }
+
+  Widget _buildContactList() {
+    if (_contactLeads.isEmpty) {
+      return _buildEmptyState('No website contact messages yet.');
+    }
+
+    return RefreshIndicator(
+      color: const Color(0xFF0D9488),
+      onRefresh: _fetchAllLeads,
+      child: ListView.builder(
+        padding: const EdgeInsets.all(14),
+        itemCount: _contactLeads.length,
+        itemBuilder: (context, index) {
+          final lead = _contactLeads[index];
+          final name = lead['name'] ?? 'Anonymous';
+          final org = lead['organization'] ?? '';
+          final phone = lead['phone'] ?? '';
+          final email = lead['email'] ?? '';
+          final type = lead['enquiry_type'] ?? 'General';
+          final message = lead['message'] ?? '';
+          final status = lead['status'] ?? 'New';
+          final time = _formatDate(lead['created_at']);
+
+          return Card(
+            margin: const EdgeInsets.only(bottom: 14),
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+              side: const BorderSide(color: Color(0xFF0D9488), width: 1.2),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          name,
+                          style: const TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF13263D),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF0D9488).withAlpha(30),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          status,
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF0D9488),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (org.toString().isNotEmpty) ...[
+                    const SizedBox(height: 2),
+                    Text(
+                      org,
+                      style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: Colors.grey[700]),
+                    ),
+                  ],
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      const Icon(Icons.category_outlined, size: 14, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Text(
+                        'Category: $type',
+                        style: TextStyle(fontSize: 11, color: Colors.grey[800]),
+                      ),
+                      const Spacer(),
+                      const Icon(Icons.access_time, size: 14, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Text(
+                        time,
+                        style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                      ),
+                    ],
+                  ),
+                  const Divider(height: 18),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF8FAFC),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.grey.withAlpha(40)),
+                    ),
+                    child: Text(
+                      message.isNotEmpty ? message : 'No details specified.',
+                      style: const TextStyle(fontSize: 13, color: Color(0xFF1E293B)),
+                    ),
+                  ),
+                  if (email.isNotEmpty) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      'Email: $email',
+                      style: TextStyle(fontSize: 12, color: Colors.grey[700]),
+                    ),
+                  ],
+                  const SizedBox(height: 14),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF0D9488),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                          ),
+                          icon: const Icon(Icons.phone, size: 18),
+                          label: const Text('Call Now', style: TextStyle(fontWeight: FontWeight.bold)),
+                          onPressed: () => _makeCall(phone),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF25D366),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                          ),
+                          icon: const Icon(Icons.chat, size: 18),
+                          label: const Text('WhatsApp', style: TextStyle(fontWeight: FontWeight.bold)),
+                          onPressed: () => _openWhatsApp(phone, name, 'Website Contact Inquiry'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
 
   Widget _buildAdvertiserList() {
-    return ListView.builder(
-      padding: const EdgeInsets.all(14),
-      itemCount: _advertiserLeads.length,
-      itemBuilder: (context, index) {
-        final lead = _advertiserLeads[index];
-        final isNew = lead.status == 'New Lead';
+    if (_advertiserLeads.isEmpty) {
+      return _buildEmptyState('No advertiser enquiries yet.');
+    }
 
-        return Card(
-          margin: const EdgeInsets.only(bottom: 14),
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-            side: BorderSide(
-              color: isNew
-                  ? const Color(0xFF0D9488)
-                  : Colors.grey.withAlpha(50),
-              width: isNew ? 1.5 : 1,
-            ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        lead.businessName,
-                        style: const TextStyle(
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF13263D),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: isNew
-                            ? const Color(0xFF0D9488).withAlpha(40)
-                            : Colors.grey.withAlpha(30),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        lead.status,
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                          color: isNew
-                              ? const Color(0xFF0D9488)
-                              : Colors.grey[700],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 6),
-                Row(
-                  children: [
-                    const Icon(Icons.person_outline, size: 14, color: Colors.grey),
-                    const SizedBox(width: 4),
-                    Text(
-                      lead.contactPerson,
-                      style: const TextStyle(
-                          fontSize: 13, fontWeight: FontWeight.w600),
-                    ),
-                    const SizedBox(width: 12),
-                    const Icon(Icons.access_time, size: 14, color: Colors.grey),
-                    const SizedBox(width: 4),
-                    Text(
-                      lead.time,
-                      style: TextStyle(fontSize: 11, color: Colors.grey[600]),
-                    ),
-                  ],
-                ),
-                const Divider(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Fleet: ${lead.autos} Autos',
-                      style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      'Duration: ${lead.days} Days',
-                      style: const TextStyle(
-                          fontSize: 12, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      lead.category,
-                      style: TextStyle(fontSize: 11, color: Colors.grey[600]),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  'Route: ${lead.location}',
-                  style: TextStyle(fontSize: 11, color: Colors.grey[700]),
-                ),
-                const SizedBox(height: 14),
+    return RefreshIndicator(
+      color: const Color(0xFF0D9488),
+      onRefresh: _fetchAllLeads,
+      child: ListView.builder(
+        padding: const EdgeInsets.all(14),
+        itemCount: _advertiserLeads.length,
+        itemBuilder: (context, index) {
+          final lead = _advertiserLeads[index];
+          final businessName = lead['business_name'] ?? 'Unnamed Business';
+          final contactPerson = lead['contact_person'] ?? '';
+          final phone = lead['phone'] ?? '';
+          final email = lead['email'] ?? '';
+          final category = lead['business_category'] ?? 'General';
+          final autos = lead['desired_autos'] ?? 10;
+          final days = lead['campaign_duration_days'] ?? 30;
+          final locations = lead['preferred_locations'] ?? 'Hyderabad Transit';
+          final notes = lead['additional_notes'] ?? '';
+          final status = lead['status'] ?? 'New';
+          final time = _formatDate(lead['created_at']);
 
-                // Instant Call & WhatsApp Buttons
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF0D9488),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                        ),
-                        icon: const Icon(Icons.phone, size: 18),
-                        label: const Text(
-                          'Call Now',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        onPressed: () => _makeCall(lead.phone),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF25D366),
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                        ),
-                        icon: const Icon(Icons.chat, size: 18),
-                        label: const Text(
-                          'WhatsApp',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        onPressed: () =>
-                            _openWhatsApp(lead.phone, lead.contactPerson),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+          return Card(
+            margin: const EdgeInsets.only(bottom: 14),
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+              side: const BorderSide(color: Color(0xFF0D9488), width: 1.2),
             ),
-          ),
-        );
-      },
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Expanded(
+                        child: Text(
+                          businessName,
+                          style: const TextStyle(
+                            fontSize: 17,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF13263D),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF0D9488).withAlpha(30),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          status,
+                          style: const TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFF0D9488),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Row(
+                    children: [
+                      const Icon(Icons.person_outline, size: 14, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Text(
+                        contactPerson,
+                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+                      ),
+                      const Spacer(),
+                      const Icon(Icons.access_time, size: 14, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Text(
+                        time,
+                        style: TextStyle(fontSize: 11, color: Colors.grey[600]),
+                      ),
+                    ],
+                  ),
+                  const Divider(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Fleet: $autos Autos', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                      Text('Duration: $days Days', style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                      Text(category, style: TextStyle(fontSize: 11, color: Colors.grey[600])),
+                    ],
+                  ),
+                  const SizedBox(height: 6),
+                  Text('Route: $locations', style: TextStyle(fontSize: 11, color: Colors.grey[700])),
+                  if (notes.toString().isNotEmpty) ...[
+                    const SizedBox(height: 6),
+                    Text('Notes: $notes', style: TextStyle(fontSize: 11, fontStyle: FontStyle.italic, color: Colors.grey[800])),
+                  ],
+                  if (email.isNotEmpty) ...[
+                    const SizedBox(height: 6),
+                    Text('Email: $email', style: TextStyle(fontSize: 11, color: Colors.grey[700])),
+                  ],
+                  const SizedBox(height: 14),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF0D9488),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                          ),
+                          icon: const Icon(Icons.phone, size: 18),
+                          label: const Text('Call Now', style: TextStyle(fontWeight: FontWeight.bold)),
+                          onPressed: () => _makeCall(phone),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF25D366),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                            padding: const EdgeInsets.symmetric(vertical: 10),
+                          ),
+                          icon: const Icon(Icons.chat, size: 18),
+                          label: const Text('WhatsApp', style: TextStyle(fontWeight: FontWeight.bold)),
+                          onPressed: () => _openWhatsApp(phone, contactPerson, 'Advertising Campaign'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 
   Widget _buildDriverList() {
-    return ListView.builder(
-      padding: const EdgeInsets.all(14),
-      itemCount: _driverLeads.length,
-      itemBuilder: (context, index) {
-        final driver = _driverLeads[index];
+    if (_driverLeads.isEmpty) {
+      return _buildEmptyState('No driver registrations yet.');
+    }
 
-        return Card(
-          margin: const EdgeInsets.only(bottom: 14),
-          elevation: 2,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      driver['name']!,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF13263D),
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(
-                        color: Colors.amber.withAlpha(40),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        driver['autoNo']!,
+    return RefreshIndicator(
+      color: const Color(0xFF0D9488),
+      onRefresh: _fetchAllLeads,
+      child: ListView.builder(
+        padding: const EdgeInsets.all(14),
+        itemCount: _driverLeads.length,
+        itemBuilder: (context, index) {
+          final driver = _driverLeads[index];
+          final name = driver['full_name'] ?? 'Unnamed Driver';
+          final phone = driver['phone'] ?? '';
+          final autoNo = driver['auto_reg_number'] ?? '';
+          final area = driver['operating_area'] ?? '';
+          final ownership = driver['ownership_status'] ?? 'owner-driver';
+          final hours = driver['daily_hours'] ?? '8-10';
+          final time = _formatDate(driver['created_at']);
+
+          return Card(
+            margin: const EdgeInsets.only(bottom: 14),
+            elevation: 2,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        name,
                         style: const TextStyle(
-                          fontSize: 12,
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFFB45309),
+                          color: Color(0xFF13263D),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  'Operating Area: ${driver['area']!}',
-                  style: TextStyle(fontSize: 12, color: Colors.grey[700]),
-                ),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFF13263D),
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: Colors.amber.withAlpha(40),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          autoNo,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: Color(0xFFB45309),
+                          ),
+                        ),
                       ),
-                    ),
-                    icon: const Icon(Icons.phone, size: 16),
-                    label: const Text('Call Auto Driver'),
-                    onPressed: () => _makeCall(driver['phone']!),
+                    ],
                   ),
-                ),
-              ],
+                  const SizedBox(height: 6),
+                  Text('Operating Area: $area', style: TextStyle(fontSize: 12, color: Colors.grey[700])),
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Ownership: $ownership', style: TextStyle(fontSize: 11, color: Colors.grey[600])),
+                      Text('Daily Hours: $hours', style: TextStyle(fontSize: 11, color: Colors.grey[600])),
+                      Text(time, style: TextStyle(fontSize: 11, color: Colors.grey[600])),
+                    ],
+                  ),
+                  const SizedBox(height: 12),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF13263D),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          ),
+                          icon: const Icon(Icons.phone, size: 16),
+                          label: const Text('Call Driver'),
+                          onPressed: () => _makeCall(phone),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF25D366),
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                          ),
+                          icon: const Icon(Icons.chat, size: 16),
+                          label: const Text('WhatsApp'),
+                          onPressed: () => _openWhatsApp(phone, name, 'Driver Partner Registration'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildEmptyState(String message) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.inbox_outlined, size: 54, color: Colors.grey.withAlpha(120)),
+          const SizedBox(height: 12),
+          Text(
+            message,
+            style: TextStyle(color: Colors.grey[600], fontSize: 14),
           ),
-        );
-      },
+          const SizedBox(height: 16),
+          ElevatedButton.icon(
+            onPressed: _fetchAllLeads,
+            icon: const Icon(Icons.refresh),
+            label: const Text('Refresh'),
+          ),
+        ],
+      ),
     );
   }
 }
