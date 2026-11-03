@@ -248,7 +248,7 @@ export default function PartnerPage() {
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                     placeholder="e.g. K. Srinivas"
-                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
                   />
                 </div>
 
@@ -263,7 +263,7 @@ export default function PartnerPage() {
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     placeholder="e.g. 98765 43210"
-                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
                   />
                 </div>
 
@@ -278,7 +278,7 @@ export default function PartnerPage() {
                     value={formData.autoRegNumber}
                     onChange={(e) => setFormData({ ...formData, autoRegNumber: e.target.value.toUpperCase() })}
                     placeholder="e.g. TS 09 UA 1234"
-                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm uppercase focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm uppercase text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
                   />
                 </div>
 
@@ -293,7 +293,7 @@ export default function PartnerPage() {
                     value={formData.operatingArea}
                     onChange={(e) => setFormData({ ...formData, operatingArea: e.target.value })}
                     placeholder="e.g. Madhapur / Hitec City / Secunderabad"
-                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
                   />
                 </div>
 
@@ -305,7 +305,7 @@ export default function PartnerPage() {
                   <select
                     value={formData.ownershipStatus}
                     onChange={(e) => setFormData({ ...formData, ownershipStatus: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
                   >
                     <option value="owner-driver">
                       {lang === "en" ? "I own and drive this auto" : "నా స్వంత ఆటో (నేనే డ్రైవ్ చేస్తాను)"}
@@ -327,7 +327,7 @@ export default function PartnerPage() {
                   <select
                     value={formData.dailyHours}
                     onChange={(e) => setFormData({ ...formData, dailyHours: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
                   >
                     <option value="6-8">6 – 8 Hours</option>
                     <option value="8-10">8 – 10 Hours</option>

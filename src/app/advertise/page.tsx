@@ -206,7 +206,7 @@ export default function AdvertisePage() {
                     value={formData.businessName}
                     onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
                     placeholder="e.g. Royal Spice Restaurant"
-                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
                   />
                 </div>
 
@@ -221,7 +221,7 @@ export default function AdvertisePage() {
                     value={formData.contactPerson}
                     onChange={(e) => setFormData({ ...formData, contactPerson: e.target.value })}
                     placeholder="e.g. Rajesh Kumar"
-                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
                   />
                 </div>
 
@@ -236,7 +236,7 @@ export default function AdvertisePage() {
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     placeholder="e.g. +91 98765 43210"
-                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
                   />
                 </div>
 
@@ -251,7 +251,7 @@ export default function AdvertisePage() {
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="e.g. marketing@business.com"
-                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
                   />
                 </div>
 
@@ -263,7 +263,7 @@ export default function AdvertisePage() {
                   <select
                     value={formData.businessCategory}
                     onChange={(e) => setFormData({ ...formData, businessCategory: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
                   >
                     <option>Restaurants & Cafés</option>
                     <option>Retail & Consumer Goods</option>
@@ -284,7 +284,7 @@ export default function AdvertisePage() {
                   <select
                     value={formData.durationDays}
                     onChange={(e) => setFormData({ ...formData, durationDays: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
                   >
                     <option value="30">30 Days (Standard Tier • ₹49/auto/day)</option>
                     <option value="15">15 Days (Custom Tier • ₹69/auto/day)</option>
@@ -305,7 +305,7 @@ export default function AdvertisePage() {
                     value={formData.desiredAutos}
                     onChange={(e) => setFormData({ ...formData, desiredAutos: e.target.value })}
                     placeholder="e.g. 15"
-                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
                   />
                 </div>
 
@@ -319,7 +319,7 @@ export default function AdvertisePage() {
                     value={formData.preferredLocations}
                     onChange={(e) => setFormData({ ...formData, preferredLocations: e.target.value })}
                     placeholder="e.g. Hitec City, Madhapur, Jubilee Hills"
-                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
                   />
                 </div>
 
@@ -366,7 +366,7 @@ export default function AdvertisePage() {
                   value={formData.additionalNotes}
                   onChange={(e) => setFormData({ ...formData, additionalNotes: e.target.value })}
                   placeholder="Share any specific dates, target audiences, or questions..."
-                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
+                  className="w-full px-4 py-2.5 rounded-xl bg-white border border-slate-300 text-sm text-slate-900 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0D9488]"
                 />
               </div>
 

@@ -22,6 +22,24 @@
     scroll-behavior: smooth;
     overflow-x: hidden;
   }
+
+  /* Form Controls Global High-Contrast Typography */
+  input,
+  textarea,
+  select {
+    color: #0F172A !important;
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: #64748B !important;
+    opacity: 1;
+  }
+
+  select option {
+    color: #0F172A !important;
+    background-color: #FFFFFF !important;
+  }
 }
 
 /* Subtle Architectural Grid Pattern (Apple-Style) */
