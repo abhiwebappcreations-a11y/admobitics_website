@@ -14,9 +14,18 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "How It Works | Admobitics Digital Media Private Limited",
+  title: "How In-Auto Advertising Works | 8-Stage Campaign Process",
   description:
-    "An 8-stage breakdown of how in-auto digital advertising campaigns are planned, reviewed, approved, and executed with Admobitics.",
+    "Step-by-step breakdown of how in-auto digital screen campaigns are planned, reviewed, approved, and broadcast on Hyderabad commercial autos with Admobitics.",
+  keywords: [
+    "how auto advertising works",
+    "in-auto screen campaign process",
+    "DOOH creative specs 16:9",
+    "hyderabad auto advertising steps",
+  ],
+  alternates: {
+    canonical: "/how-it-works",
+  },
 };
 
 export default function HowItWorksPage() {

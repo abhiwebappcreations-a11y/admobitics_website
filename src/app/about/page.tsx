@@ -4,9 +4,19 @@ import { ShieldCheck, Target, Eye, Handshake, Compass, Award, Phone, Mail, UserC
 import Link from "next/link";
 
 export const metadata = {
-  title: "About Us | Admobitics Digital Media Private Limited",
+  title: "About Us | In-Auto Transit DOOH Network Hyderabad",
   description:
-    "Learn about Admobitics Digital Media Private Limited, our founders, vision, mission, approach, and our 10-screen in-auto digital advertising network in Hyderabad.",
+    "Learn about Admobitics Digital Media Private Limited, founded in Hyderabad by Thrishanth Yadav, Vivek Gudala, and Madhan Akula to modernize auto advertising through verified passenger-facing digital screens.",
+  keywords: [
+    "about admobitics",
+    "admobitics founders",
+    "admobitics digital media private limited",
+    "hyderabad transit DOOH company",
+    "auto rickshaw media network",
+  ],
+  alternates: {
+    canonical: "/about",
+  },
 };
 
 export default function AboutPage() {

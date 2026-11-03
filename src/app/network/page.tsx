@@ -13,9 +13,19 @@ import {
 } from "lucide-react";
 
 export const metadata = {
-  title: "Our Network | Admobitics Digital Media Private Limited",
+  title: "Transit Corridors & Screen Fleet in Hyderabad | Admobitics",
   description:
-    "Explore the Admobitics 10-screen in-auto digital advertising network, screen placement, pilot deployment status, and operating corridors in Hyderabad.",
+    "Explore the Admobitics 10-screen in-auto digital advertising network operating across high-density transit corridors in Hitec City, Gachibowli, Madhapur, Jubilee Hills, and Secunderabad.",
+  keywords: [
+    "admobitics network",
+    "hyderabad auto transit corridors",
+    "hitec city auto screens",
+    "gachibowli digital auto ads",
+    "madhapur transit DOOH",
+  ],
+  alternates: {
+    canonical: "/network",
+  },
 };
 
 export default function NetworkPage() {
