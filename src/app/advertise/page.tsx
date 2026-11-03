@@ -35,10 +35,12 @@ export default function AdvertisePage() {
 
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setErrorMessage(null);
     try {
       const res = await fetch("/api/enquiry", {
         method: "POST",
@@ -49,10 +51,16 @@ export default function AdvertisePage() {
         setSubmitted(true);
       } else {
         const errData = await res.json().catch(() => ({}));
-        alert(errData.details || errData.error || "Enquiry could not be submitted. Please connect via WhatsApp directly.");
+        const msg = errData.details || errData.error || "Enquiry could not be submitted. Please connect via WhatsApp directly.";
+        setErrorMessage(msg);
       }
-    } catch {
-      alert("Submission error. Please connect via WhatsApp directly.");
+    } catch (err: any) {
+      console.error("Submission error:", err);
+      setErrorMessage(
+        err?.message
+          ? `Connection issue (${err.message}). Click below to send directly via WhatsApp.`
+          : "Unable to reach server. Please connect via WhatsApp directly."
+      );
     } finally {
       setLoading(false);
     }
@@ -376,6 +384,22 @@ export default function AdvertisePage() {
                   I consent to being contacted by Admobitics Digital Media Private Limited regarding this campaign enquiry and acknowledge the Privacy Policy. Submitting this form constitutes an enquiry and does not create an advertising contract.
                 </label>
               </div>
+
+              {errorMessage && (
+                <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 space-y-2">
+                  <p className="font-semibold">{errorMessage}</p>
+                  <a
+                    href={`https://wa.me/${siteConfig.contact.whatsappRaw}?text=${encodeURIComponent(
+                      `Hi Admobitics, I'd like to book an advertising campaign.\nBusiness: ${formData.businessName}\nContact: ${formData.contactPerson}\nPhone: ${formData.phone}\nEmail: ${formData.email}\nAutos: ${formData.desiredAutos}\nDuration: ${formData.durationDays} days\nLocations: ${formData.preferredLocations}`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 text-white font-bold hover:bg-emerald-700 transition-colors"
+                  >
+                    Send Directly via WhatsApp
+                  </a>
+                </div>
+              )}
 
               {/* Submit Button */}
               <div className="pt-2">

@@ -28,10 +28,12 @@ export default function ContactPage() {
 
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setErrorMessage(null);
     try {
       const res = await fetch("/api/enquiry", {
         method: "POST",
@@ -42,10 +44,16 @@ export default function ContactPage() {
         setSubmitted(true);
       } else {
         const errData = await res.json().catch(() => ({}));
-        alert(errData.details || errData.error || "Message could not be sent. Please connect via WhatsApp directly.");
+        const msg = errData.details || errData.error || "Message could not be saved. Please connect via WhatsApp.";
+        setErrorMessage(msg);
       }
-    } catch {
-      alert("Submission error. Please connect via WhatsApp directly.");
+    } catch (err: any) {
+      console.error("Submission error:", err);
+      setErrorMessage(
+        err?.message
+          ? `Connection issue (${err.message}). Click below to send directly via WhatsApp.`
+          : "Unable to reach the server. Please click below to send via WhatsApp."
+      );
     } finally {
       setLoading(false);
     }
@@ -274,6 +282,23 @@ export default function ContactPage() {
                         I acknowledge the Privacy Policy and consent to Admobitics contacting me regarding this request.
                       </label>
                     </div>
+
+                    {errorMessage && (
+                      <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 text-xs text-amber-900 space-y-2">
+                        <p className="font-semibold">{errorMessage}</p>
+                        <a
+                          href={`https://wa.me/${siteConfig.contact.whatsappRaw}?text=${encodeURIComponent(
+                            `Hi Admobitics, I'm reaching out from the website.\nName: ${formData.name}\nOrg: ${formData.organization}\nEmail: ${formData.email}\nPhone: ${formData.phone}\nMessage: ${formData.message}`
+                          )}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-600 text-white font-bold hover:bg-emerald-700 transition-colors"
+                        >
+                          <MessageCircle className="w-3.5 h-3.5" />
+                          Send Directly via WhatsApp
+                        </a>
+                      </div>
+                    )}
 
                     <button
                       type="submit"
