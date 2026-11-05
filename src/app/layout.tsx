@@ -98,6 +98,17 @@ export const metadata: Metadata = {
     },
   },
   category: "Advertising & Marketing",
+  icons: {
+    icon: [
+      { url: "/icon.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    shortcut: "/favicon.ico",
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+  },
   other: {
     "geo.region": "IN-TG",
     "geo.placename": "Hyderabad",
@@ -213,6 +224,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={jakarta.variable}>
       <head>
+        <link rel="icon" href="/icon.png" sizes="32x32" type="image/png" />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
