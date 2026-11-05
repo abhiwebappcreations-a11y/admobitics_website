@@ -14,6 +14,7 @@ import {
 
 export function Hero() {
   const [activeAdIndex, setActiveAdIndex] = useState(0);
+  const [displayMode, setDisplayMode] = useState<"video" | "mockup">("video");
 
   const sampleCampaigns = [
     {
@@ -160,60 +161,102 @@ export function Hero() {
               {/* Physical Screen Bezel Enclosure - Dark Contrast pops on clean light page */}
               <div className="relative rounded-3xl bg-[#0F172A] border-4 border-slate-800 shadow-2xl p-5 overflow-hidden text-white">
                 
-                {/* Header: Hardware Status & Indicator */}
-                <div className="flex items-center justify-between pb-3.5 border-b border-white/10 text-xs">
+                {/* Header: Hardware Status & Toggle Buttons */}
+                <div className="flex flex-wrap items-center justify-between gap-2 pb-3.5 border-b border-white/10 text-xs">
                   <div className="flex items-center gap-2">
                     <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
                     <span className="font-bold text-white tracking-wide text-[11px]">
                       PASSENGER-FACING DIGITAL SCREEN
                     </span>
                   </div>
-                  <span className="text-[10px] font-mono bg-white/10 px-2.5 py-0.5 rounded-full text-slate-300">
-                    1080p • 16:9 • 15s LOOP
-                  </span>
+
+                  {/* Toggle: Live Footage vs Simulated Ads */}
+                  <div className="flex items-center gap-1 bg-white/10 p-1 rounded-xl">
+                    <button
+                      type="button"
+                      onClick={() => setDisplayMode("video")}
+                      className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all flex items-center gap-1.5 ${
+                        displayMode === "video"
+                          ? "bg-[#C59A4E] text-white shadow-sm"
+                          : "text-slate-300 hover:text-white"
+                      }`}
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-red-400 animate-ping" />
+                      <span>Real Video</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setDisplayMode("mockup")}
+                      className={`px-2.5 py-1 rounded-lg text-[10px] font-bold transition-all ${
+                        displayMode === "mockup"
+                          ? "bg-[#C59A4E] text-white shadow-sm"
+                          : "text-slate-300 hover:text-white"
+                      }`}
+                    >
+                      Sample Ads
+                    </button>
+                  </div>
                 </div>
 
                 {/* The Active Display Panel */}
                 <div className="relative mt-4 aspect-video rounded-2xl overflow-hidden bg-black border border-slate-700 shadow-inner group">
                   
-                  {/* Rotating Campaign Content */}
-                  <div
-                    className={`absolute inset-0 bg-gradient-to-br ${currentCampaign.bgGradient} p-5 flex flex-col justify-between text-white transition-all duration-700 z-10`}
-                  >
-                    {/* Top Bar of Ad */}
-                    <div className="flex items-center justify-between text-[11px] font-semibold">
-                      <span className="bg-black/50 backdrop-blur-md px-2.5 py-1 rounded-md text-[#E0BA73] border border-white/10">
-                        {currentCampaign.category}
-                      </span>
-                      <span className="flex items-center gap-1.5 text-slate-300 text-[10px] bg-black/40 px-2 py-0.5 rounded">
-                        <RotateCw className="w-3 h-3 animate-spin text-[#C59A4E]" />
-                        Auto-Rotating
-                      </span>
+                  {displayMode === "video" ? (
+                    <div className="relative w-full h-full bg-black">
+                      <video
+                        src="/videos/admobitics-screen-demo.mp4"
+                        autoPlay
+                        loop
+                        muted
+                        playsInline
+                        controls
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute top-2.5 left-2.5 bg-black/75 backdrop-blur-md px-2.5 py-1 rounded-md text-[10px] font-bold text-emerald-400 border border-emerald-500/30 flex items-center gap-1.5 pointer-events-none">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                        <span>LIVE HYDERABAD AUTO FOOTAGE</span>
+                      </div>
                     </div>
+                  ) : (
+                    /* Rotating Campaign Content */
+                    <div
+                      className={`absolute inset-0 bg-gradient-to-br ${currentCampaign.bgGradient} p-5 flex flex-col justify-between text-white transition-all duration-700 z-10`}
+                    >
+                      {/* Top Bar of Ad */}
+                      <div className="flex items-center justify-between text-[11px] font-semibold">
+                        <span className="bg-black/50 backdrop-blur-md px-2.5 py-1 rounded-md text-[#E0BA73] border border-white/10">
+                          {currentCampaign.category}
+                        </span>
+                        <span className="flex items-center gap-1.5 text-slate-300 text-[10px] bg-black/40 px-2 py-0.5 rounded">
+                          <RotateCw className="w-3 h-3 animate-spin text-[#C59A4E]" />
+                          Auto-Rotating
+                        </span>
+                      </div>
 
-                    {/* Main Creative Text */}
-                    <div className="space-y-1 my-auto">
-                      <p className="text-xs font-black tracking-wider text-[#E0BA73] uppercase">
-                        {currentCampaign.brand}
-                      </p>
-                      <h3 className="text-lg sm:text-xl font-extrabold text-white leading-tight">
-                        {currentCampaign.tagline}
-                      </h3>
-                      <p className="text-xs text-slate-200">
-                        {currentCampaign.offer}
-                      </p>
-                    </div>
+                      {/* Main Creative Text */}
+                      <div className="space-y-1 my-auto">
+                        <p className="text-xs font-black tracking-wider text-[#E0BA73] uppercase">
+                          {currentCampaign.brand}
+                        </p>
+                        <h3 className="text-lg sm:text-xl font-extrabold text-white leading-tight">
+                          {currentCampaign.tagline}
+                        </h3>
+                        <p className="text-xs text-slate-200">
+                          {currentCampaign.offer}
+                        </p>
+                      </div>
 
-                    {/* Bottom CTA on Screen */}
-                    <div className="flex items-center justify-between border-t border-white/20 pt-2 text-[10px]">
-                      <span className="font-mono text-white/90 font-bold bg-white/15 px-2 py-0.5 rounded">
-                        {currentCampaign.code}
-                      </span>
-                      <span className="text-[#E0BA73] font-bold tracking-wider uppercase text-[9px]">
-                        Admobitics Auto Network
-                      </span>
+                      {/* Bottom CTA on Screen */}
+                      <div className="flex items-center justify-between border-t border-white/20 pt-2 text-[10px]">
+                        <span className="font-mono text-white/90 font-bold bg-white/15 px-2 py-0.5 rounded">
+                          {currentCampaign.code}
+                        </span>
+                        <span className="text-[#E0BA73] font-bold tracking-wider uppercase text-[9px]">
+                          Admobitics Auto Network
+                        </span>
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                 </div>
 
@@ -233,21 +276,23 @@ export function Hero() {
                   </div>
                 </div>
 
-                {/* Campaign switcher buttons */}
-                <div className="mt-4 flex items-center justify-center gap-2 pt-2 border-t border-white/10">
-                  <span className="text-[10px] text-slate-400 mr-1">Preview Ad:</span>
-                  {sampleCampaigns.map((_, i) => (
-                    <button
-                      key={i}
-                      type="button"
-                      onClick={() => setActiveAdIndex(i)}
-                      aria-label={`Show sample campaign ${i + 1}`}
-                      className={`h-2 rounded-full transition-all ${
-                        activeAdIndex === i ? "w-6 bg-[#C59A4E]" : "w-2 bg-slate-600 hover:bg-slate-400"
-                      }`}
-                    />
-                  ))}
-                </div>
+                {/* Campaign switcher buttons (only shown in mockup mode) */}
+                {displayMode === "mockup" && (
+                  <div className="mt-4 flex items-center justify-center gap-2 pt-2 border-t border-white/10">
+                    <span className="text-[10px] text-slate-400 mr-1">Preview Ad:</span>
+                    {sampleCampaigns.map((_, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => setActiveAdIndex(i)}
+                        aria-label={`Show sample campaign ${i + 1}`}
+                        className={`h-2 rounded-full transition-all ${
+                          activeAdIndex === i ? "w-6 bg-[#C59A4E]" : "w-2 bg-slate-600 hover:bg-slate-400"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                )}
 
               </div>
 
