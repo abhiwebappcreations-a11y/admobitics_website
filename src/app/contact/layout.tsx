@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     title: "Contact Admobitics Digital Media | Hyderabad Office & Director Lines",
     description:
       "Reach our leadership team directly for campaign bookings, driver partnerships, or agency collaboration in Hyderabad.",
-    url: "https://admobitics.com/contact",
+    url: "/contact",
     type: "website",
   },
 };

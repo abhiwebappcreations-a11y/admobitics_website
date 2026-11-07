@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     title: "Book In-Auto Screen Advertising Campaigns | Admobitics Hyderabad",
     description:
       "Display your brand on 16:9 digital screens inside commercial autos across Hyderabad. Dual-slider calculator, formula pricing from ₹49/day.",
-    url: "https://admobitics.com/advertise",
+    url: "/advertise",
     type: "website",
   },
 };

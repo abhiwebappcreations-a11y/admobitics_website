@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     title: "Partner With Admobitics | Auto Driver & Vehicle Owner Network Hyderabad",
     description:
       "Join Hyderabad's growing in-auto digital advertising network. Earn dependable monthly compensation with zero screen hardware investment.",
-    url: "https://admobitics.com/partner",
+    url: "/partner",
     type: "website",
   },
 };
